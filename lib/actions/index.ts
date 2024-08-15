@@ -35,8 +35,28 @@ export async function scrapeAndStoreProduct(productUrl: string) {
       product,
       { upsert: true, new: true }
     );
-    // revalidatePath(`/products/${newProduct._id}`);
+    revalidatePath(`/products/${newProduct._id}`);
   } catch (error: any) {
     throw new Error(`Failed to create/update product: ${error.message}`);
+  }
+}
+
+export async function getProductById(productId: string) {
+  try {
+    connectToDB();
+    const product = await Product.findById(productId);
+    return product;
+  } catch (error: any) {
+    throw new Error(`Failed to get product: ${error.message}`);
+  }
+}
+
+export async function getAllProducts() {
+  try {
+    connectToDB();
+    const products = await Product.find();
+    return products;
+  } catch (error: any) {
+    throw new Error(`Failed to get products: ${error.message}`);
   }
 }
